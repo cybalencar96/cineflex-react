@@ -1,7 +1,7 @@
 export default function LoadingComponent() {
     return (
-        <h1>
+        <main class="main-content">
             Carregando...
-        </h1>
+        </main>
     )
 }

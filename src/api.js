@@ -7,7 +7,6 @@ function getMovies(setState) {
     axios
     .get(GET_MOVIES_URL)
     .then( res => {
-        console.log(res.data)
         return setState(res.data);
     })
     .catch( err => {
@@ -16,16 +15,15 @@ function getMovies(setState) {
     })
 }
 
-function getMovieSesions(idMovie) {
+function getMovieSesions(idMovie,setState) {
     axios
     .get(`${GET_MOVIES_URL}/${idMovie}/showtimes`)
     .then( res => {
-        console.log(res.data)
-        return res.data;
+        return setState(res.data);
     })
     .catch( err => {
         console.log(err);
-        return null;
+        return setState(null);
     })
 }
 
