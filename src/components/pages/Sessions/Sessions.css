@@ -1,2 +1,29 @@
 .day-session-container {
+    padding-left: 30px;
+
+}
+
+.day-session-container h3 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+.day-session-container .times {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.day-session-container .times .time {
+    width: 82px;
+    height: 43px;
+    background-color: #E8833A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
 }

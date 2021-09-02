@@ -1,0 +1,18 @@
+.seats {
+
+    padding: 20px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.seat {
+    width: 26px;
+    height: 26px;
+    border-radius: 12px;
+    background: #C3CFD9;
+    border: 1px solid #808F9D;
+}

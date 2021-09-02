@@ -27,16 +27,16 @@ function getMovieSesions(idMovie,setState) {
     })
 }
 
-function getSessionSeats(idSession) {
+function getSessionSeats(idSession, setState) {
     axios
     .get(`${GET_SESSIONS_URL}/${idSession}/seats`)
     .then( res => {
         console.log(res.data)
-        return res.data;
+        return setState(res.data);
     })
     .catch( err => {
         console.log(err);
-        return null;
+        return setState(null);
     })
 }
 
