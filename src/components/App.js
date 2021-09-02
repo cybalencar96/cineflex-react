@@ -1,5 +1,18 @@
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
+import Topbar from "./TopBar/Topbar";
+import Movies from "./pages/Movies/Movies"
 export default function App() {
     return (
-        <h1>Hello World</h1>
+        <>
+            <Topbar/>
+
+            <Router>
+                <Switch>
+                    <Route path="/" exact>
+                        <Movies />
+                    </Route>
+                </Switch>
+            </Router>
+        </>
     )
 }
