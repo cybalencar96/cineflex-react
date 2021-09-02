@@ -1,6 +1,6 @@
 .seats {
-
     padding: 20px;
+    font-size: 14px;
 
     display: flex;
     flex-wrap: wrap;
@@ -12,7 +12,43 @@
 .seat {
     width: 26px;
     height: 26px;
+    line-height: 20px;
     border-radius: 12px;
+    text-align: center;
+}
+
+.seat span {
+    display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+.status-types {
+    display: flex;
+    justify-content: space-around;
+}
+
+.status-types > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.status-type-ball {
+    width: 26px;
+    height: 26px;
+    border-radius: 17px;
+}
+
+.selected-type {
+    background: #8DD7CF;
+    border: 1px solid #1AAE9E;
+}
+
+.available-type {
     background: #C3CFD9;
-    border: 1px solid #808F9D;
+    border: 1px solid #7B8B99;
+}
+
+.unavailable-type {
+    background: #FBE192;
+    border: 1px solid #F7C52B;
 }
