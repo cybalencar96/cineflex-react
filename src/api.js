@@ -2,6 +2,7 @@ import axios from "axios";
 
 const GET_MOVIES_URL = "https://mock-api.bootcamp.respondeai.com.br/api/v3/cineflex/movies"
 const GET_SESSIONS_URL = `https://mock-api.bootcamp.respondeai.com.br/api/v3/cineflex/showtimes`
+const POST_SEATS_URL = "https://mock-api.bootcamp.respondeai.com.br/api/v3/cineflex/seats/book-many"
 
 function getMovies(setState) {
     axios
@@ -40,8 +41,22 @@ function getSessionSeats(idSession, setState) {
     })
 }
 
+function postSeats(seatsObj) {
+    console.log(seatsObj)
+    axios
+    .post(POST_SEATS_URL, seatsObj)
+    .then(() => {
+        return true;
+    })
+    .catch (err => {
+        console.log(err);
+        return false;
+    })
+}
+
 export {
     getMovies,
     getMovieSesions,
-    getSessionSeats
+    getSessionSeats,
+    postSeats
 }

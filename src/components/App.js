@@ -3,8 +3,11 @@ import Topbar from "./TopBar/Topbar";
 import Movies from "./pages/Movies/Movies"
 import Sessions from "./pages/Sessions/Sessions"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
-
+import SuccessPage from "./pages/SuccessPage/SuccessPage"
+import { useState } from "react";
 export default function App() {
+
+    const [finalInfos,setFinalInfos] = useState({});
     return (
         <>
             <Topbar/>
@@ -20,7 +23,11 @@ export default function App() {
                     </Route>
 
                     <Route path="/assentos/:idSession" exact>
-                        <SeatsPage />
+                        <SeatsPage setFinalInfos={setFinalInfos}/>
+                    </Route>
+
+                    <Route path="/sucesso" exact>
+                        <SuccessPage finalInfos={finalInfos}/>
                     </Route>
                 </Switch>
             </Router>

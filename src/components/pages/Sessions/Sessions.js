@@ -22,7 +22,6 @@ export default function Sessions() {
     return (
         <main className="main-content">
             <PageTitle>Selecione o horário</PageTitle>
-            {console.log(movie)}
             {
 
                 movie.days.map(day => {
@@ -34,7 +33,6 @@ export default function Sessions() {
                     />
                 })
             }
-            {console.log(movie.posterURL)}
             <Footer posterURL={movie.posterURL} movieTitle={movie.title}/>
         </main>
     )

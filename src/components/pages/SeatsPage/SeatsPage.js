@@ -1,14 +1,16 @@
 import "./SeatsPage.css"
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { getSessionSeats, getSesstionSeats } from "../../../api"
+import { getSessionSeats, postSeats } from "../../../api"
 import LoadingComponent from "../../LoadingComponent"
 import PageTitle from "../../PageTitle"
+import Footer from "../../Footer"
 
-export default function SeatsPage() {
+export default function SeatsPage({setFinalInfos}) {
     const params = useParams();
     const [seats, setSeats] = useState("");
     const [selectedSeats, setSelectedSeats] = useState([]); 
+    const [inputValues, setInputValues] = useState({});
 
     useEffect(() => {
         getSessionSeats(params.idSession, setSeats);
@@ -38,6 +40,25 @@ export default function SeatsPage() {
         }
     }
 
+    //função que armazenará os valores dos inputs controlados
+    function change(event,attribute) {
+        //event target pega o elemento input
+        inputValues[attribute] = event.target.value
+        setInputValues({...inputValues});
+    }
+    
+    async function reserveSeats() {
+        const seatsObj = {
+            ids: selectedSeats,
+            name: inputValues.name,
+            cpf: inputValues.cpf
+        }
+        //const isSuccess = await postSeats(seatsObj);
+        if (true) {
+            setFinalInfos(seatsObj);
+        }   
+
+    }
 
     return (
         <main className="main-content">
@@ -46,35 +67,51 @@ export default function SeatsPage() {
             <section className="seats">
                 {
                     seats.seats.map(seat => (
-                        <Seat toggleSeat={toggleSeat} seatAvailable={seatAvailable} id={seat.id} name={seat.name} isAvailable={seat.isAvailable}/>
+                        <Seat toggleSeat={toggleSeat} id={seat.id} name={seat.name} isAvailable={seat.isAvailable}/>
                     ))
                 }
             </section>
 
             <section className="status-types">
                 <div>
-                    <div class="status-type-ball selected-type"></div>
+                    <div className="status-type-ball selected-type"></div>
                     <p>Selecionado</p>
                 </div>
                 <div>
-                    <div class="status-type-ball available-type"></div>
+                    <div className="status-type-ball available-type"></div>
                     <p>Disponível</p>
                 </div>
                 <div>
-                    <div class="status-type-ball unavailable-type"></div>
+                    <div className="status-type-ball unavailable-type"></div>
                     <p>Indisponível</p>
                 </div>
             </section>
             
-            
+            <section className="seatsPage-input">
+                <h3>Nome do comprador:</h3>
+                {/* Exemplo de input controlado (pelo react) usando onChange e value
+                    Desta forma caso o input seja renderizado ele não perderá o valor
+                */}
+                <input placeholder="Digite seu nome..." onChange={(e) => change(e,"name")} value={!inputValues.name ? "" : inputValues.name}/>
+            </section>
+            <section  className="seatsPage-input">
+                <h3>CPF do comprador:</h3>
+                <input placeholder="Digite seu CPF..." onChange={(e) => change(e,"cpf")} value={!inputValues.cpf ? "" : inputValues.cpf}/>
+            </section>
+
+            <Link to="/sucesso">
+                <button className="seatsPage-button" onClick={reserveSeats}>Reservar assento(s)</button>
+            </Link>
+            <Footer posterURL={seats.movie.posterURL} movieTitle={seats.movie.title} weekday={seats.day.weekday} time={seats.name}/>
         </main>
      
     )
 }
 
-function Seat({id,isAvailable,name,toggleSeat,seatAvailable}) {
+function Seat({id,isAvailable,name,toggleSeat}) {
 
     const [seatState, setSeatState] = useState("available-type");
+    useEffect(() => {if (!isAvailable) setSeatState("unavailable-type")},[]);
     function reserve() {
         if (!isAvailable) return alert("Assento já reservado");
         setSeatState(toggleSeat(id));
