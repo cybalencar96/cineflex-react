@@ -1,5 +1,5 @@
 import "./SeatsPage.css"
-import { useParams, Link } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { getSessionSeats, postSeats } from "../../../api"
 import LoadingComponent from "../../LoadingComponent"
@@ -11,6 +11,8 @@ export default function SeatsPage({setFinalInfos}) {
     const [seats, setSeats] = useState("");
     const [selectedSeats, setSelectedSeats] = useState([]); 
     const [inputValues, setInputValues] = useState({});
+    let history = useHistory();
+
     useEffect(() => {
         getSessionSeats(params.idSession, setSeats);
     },[])
@@ -20,7 +22,6 @@ export default function SeatsPage({setFinalInfos}) {
             <LoadingComponent/>
         )
     }
-    console.log(seats);
 
     function seatAvailable(seatId) {
         if (selectedSeats.includes(seatId)) {
@@ -53,9 +54,8 @@ export default function SeatsPage({setFinalInfos}) {
             name: inputValues.name,
             cpf: inputValues.cpf
         }
-        const isSuccess = await postSeats(seatsObj);
-        if (isSuccess) {
-
+        try {
+            await postSeats(seatsObj);
             const finalInfos = {
                 movieName: seats.movie.title,
                 date: seats.day.date,
@@ -64,11 +64,12 @@ export default function SeatsPage({setFinalInfos}) {
                 buyerName: inputValues.name,
                 buyerCpf: inputValues.cpf
             }
-
-            console.log(finalInfos)
             setFinalInfos(() => finalInfos);
-        }   
-
+            history.push("/sucesso");
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -110,9 +111,8 @@ export default function SeatsPage({setFinalInfos}) {
                 <input placeholder="Digite seu CPF..." onChange={(e) => change(e,"cpf")} value={!inputValues.cpf ? "" : inputValues.cpf}/>
             </section>
 
-            <Link to="/sucesso">
-                <button className="seatsPage-button" onClick={reserveSeats}>Reservar assento(s)</button>
-            </Link>
+            <button className="seatsPage-button" onClick={reserveSeats}>Reservar assento(s)</button>
+
             <Footer posterURL={seats.movie.posterURL} movieTitle={seats.movie.title} weekday={seats.day.weekday} time={seats.name}/>
         </main>
      

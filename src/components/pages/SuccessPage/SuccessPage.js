@@ -11,7 +11,8 @@ export default function SuccessPage(props) {
         buyerName,
         buyerCpf
     } = props.finalInfos
-    console.log(props)
+
+    console.log(props.finalInfos)
     return (
         <main className="main-content main-success-page">
             <PageTitle>

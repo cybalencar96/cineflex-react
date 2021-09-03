@@ -32,7 +32,6 @@ function getSessionSeats(idSession, setState) {
     axios
     .get(`${GET_SESSIONS_URL}/${idSession}/seats`)
     .then( res => {
-        console.log(res.data)
         return setState(res.data);
     })
     .catch( err => {
@@ -42,10 +41,9 @@ function getSessionSeats(idSession, setState) {
 }
 
 function postSeats(seatsObj) {
-    console.log(seatsObj)
     axios
     .post(POST_SEATS_URL, seatsObj)
-    .then(() => {
+    .then((res) => {
         return true;
     })
     .catch (err => {

@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
+import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom"
 import Topbar from "./TopBar/Topbar";
 import Movies from "./pages/Movies/Movies"
 import Sessions from "./pages/Sessions/Sessions"
@@ -10,12 +10,12 @@ export default function App() {
     const [finalInfos,setFinalInfos] = useState({});
     return (
         <>
-            <Topbar/>
-
             <Router>
+                <Topbar/>
+
                 <Switch>
                     <Route path="/" exact>
-                        <Movies />
+                        <Movies setFinalInfos={setFinalInfos}/>
                     </Route>
 
                     <Route path="/sessoes/:idMovie" exact>
@@ -27,7 +27,7 @@ export default function App() {
                     </Route>
 
                     <Route path="/sucesso" exact>
-                        <SuccessPage finalInfos={finalInfos}/>
+                        {finalInfos.movieName ? <SuccessPage finalInfos={finalInfos}/> : <Redirect to="/"/>}
                     </Route>
                 </Switch>
             </Router>

@@ -5,12 +5,12 @@ import {getMovies} from "../../../api"
 import { useState, useEffect } from "react"
 import LoadingComponent from "../../LoadingComponent"
 import PageTitle from "../../PageTitle"
-export default function Movies() {
-
+export default function Movies({setFinalInfos}) {
     const [movies, setMovies] = useState("");
 
     useEffect(() => {
-        getMovies(setMovies)
+        setFinalInfos({});
+        getMovies(setMovies);
     }, []);
 
     if (!movies) {
