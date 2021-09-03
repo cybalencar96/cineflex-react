@@ -11,7 +11,6 @@ export default function SeatsPage({setFinalInfos}) {
     const [seats, setSeats] = useState("");
     const [selectedSeats, setSelectedSeats] = useState([]); 
     const [inputValues, setInputValues] = useState({});
-
     useEffect(() => {
         getSessionSeats(params.idSession, setSeats);
     },[])
@@ -21,6 +20,7 @@ export default function SeatsPage({setFinalInfos}) {
             <LoadingComponent/>
         )
     }
+    console.log(seats);
 
     function seatAvailable(seatId) {
         if (selectedSeats.includes(seatId)) {
@@ -53,9 +53,20 @@ export default function SeatsPage({setFinalInfos}) {
             name: inputValues.name,
             cpf: inputValues.cpf
         }
-        //const isSuccess = await postSeats(seatsObj);
-        if (true) {
-            setFinalInfos(seatsObj);
+        const isSuccess = await postSeats(seatsObj);
+        if (isSuccess) {
+
+            const finalInfos = {
+                movieName: seats.movie.title,
+                date: seats.day.date,
+                time: seats.name,
+                seats: seats.seats.filter((seat) => selectedSeats.includes(seat.id)),
+                buyerName: inputValues.name,
+                buyerCpf: inputValues.cpf
+            }
+
+            console.log(finalInfos)
+            setFinalInfos(() => finalInfos);
         }   
 
     }

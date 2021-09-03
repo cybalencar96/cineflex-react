@@ -1,31 +1,39 @@
 import PageTitle from "../../PageTitle"
 import { Link } from "react-router-dom" 
+import "./SuccessPage.css"
 
-export default function SuccessPage({finalInfos}) {
-    console.log(finalInfos)
+export default function SuccessPage(props) {
+    const {
+        movieName,
+        date,
+        time,
+        seats,
+        buyerName,
+        buyerCpf
+    } = props.finalInfos
+    console.log(props)
     return (
-        <main className="main-content">
+        <main className="main-content main-success-page">
             <PageTitle>
                 <span class="success-title">Pedido feito com sucesso!</span>
             </PageTitle>
 
-            <article>
-                <section>
+            
+                <section class="final-infos">
                     <h3>Filme e sessão</h3>
-                    <p>Nome do filme</p>
-                    <p>Data e hora</p>
+                    <p>{movieName}</p>
+                    <p>{date} - {time}</p>
                 </section>
-                <section>
+                <section class="final-infos">
                     <h3>Ingressos</h3>
-                    <p>Assento 1</p>
-                    <p>Assento 2</p>
+                    { seats.map(seat => <p>Assento {seat.name}</p>) }
                 </section>
-                <section>
+                <section class="final-infos">
                     <h3>Comprador</h3>
-                    <p>Nome: Nome do comprador</p>
-                    <p>CPF: 123.123.123-12</p>
+                    <p>Nome: {buyerName}</p>
+                    <p>CPF: {buyerCpf}</p>
                 </section>
-            </article>
+            
 
             <Link to="/">
                 <button>Voltar para Home</button>
