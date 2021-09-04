@@ -1,13 +1,15 @@
-import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom"
+import {BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 import Topbar from "./shared/TopBar/Topbar";
 import Movies from "./pages/Movies/Movies"
 import Sessions from "./pages/Sessions/Sessions"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
 import { useState } from "react";
+
 export default function App() {
 
     const [finalInfos,setFinalInfos] = useState({});
+
     return (
         <>
             <Router>

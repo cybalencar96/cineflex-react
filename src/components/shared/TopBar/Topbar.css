@@ -1,6 +1,5 @@
 .topbar {
-    font-size: 34px;
-    color: #E8833A;
+    
     background-color: #C3CFD9;
 
     position: fixed;
@@ -12,4 +11,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.topbar h1 {
+    font-size: 34px;
+    color: #E8833A;
 }
