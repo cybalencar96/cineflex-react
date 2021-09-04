@@ -1,4 +1,4 @@
-import PageTitle from "../../PageTitle"
+import PageTitle from "../../shared/PageTitle"
 import { Link } from "react-router-dom" 
 import "./SuccessPage.css"
 

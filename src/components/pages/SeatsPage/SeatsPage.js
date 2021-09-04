@@ -2,10 +2,11 @@ import "./SeatsPage.css"
 import { useParams, useHistory } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { getSessionSeats, postSeats } from "../../../api"
-import LoadingComponent from "../../LoadingComponent"
-import PageTitle from "../../PageTitle"
-import Footer from "../../Footer"
-import styled from "styled-components"
+import LoadingComponent from "../../shared/LoadingComponent"
+import PageTitle from "../../shared/PageTitle"
+import Footer from "../../shared/Footer"
+import Seat from "./Seat"
+import { Button, Input } from "./SeatsPageStyle"
 
 export default function SeatsPage({setFinalInfos}) {
     const params = useParams();
@@ -116,6 +117,7 @@ export default function SeatsPage({setFinalInfos}) {
             </section>
             <section  className="seatsPage-input">
                 <h3>CPF do comprador:</h3>
+                {/* styled component */}
                 <Input isValid={isValid(inputValues.cpf,"cpf")} placeholder="Digite seu CPF..." onChange={(e) => change(e,"cpf")} value={!inputValues.cpf ? "" : inputValues.cpf}/>
                 <p>{isValid(inputValues.cpf,"cpf") ? "" : "cpf invalido"}</p>
             </section>
@@ -128,48 +130,3 @@ export default function SeatsPage({setFinalInfos}) {
      
     )
 }
-
-function Seat({id,isAvailable,name,toggleSeat}) {
-
-    const [seatState, setSeatState] = useState("available-type");
-    useEffect(() => {if (!isAvailable) setSeatState("unavailable-type")},[]);
-    function reserve() {
-        if (!isAvailable) return alert("Assento já reservado");
-        setSeatState(toggleSeat(id));
-    }
-
-    return (
-        <div onClick={reserve} className={"seat " + seatState}>
-            <span>{name}</span>
-        </div>
-    )
-}
-
-const Button = styled.button`
-    background-color: #E8833A;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    border-radius: 3px;
-    cursor: pointer;
-    margin: 30px auto ;
-    font-size: 18px;
-    width: 225px;
-    height: 42px;
-    border: none;
-    opacity: ${({enabled}) => enabled ? 1 : 0.6};
-`
-
-const Input = styled.input`
-    width: 100%;
-    height: 51px;
-    border-radius: 3px;
-    border: 1px solid ${({isValid}) => isValid ? '#D5D5D5' : 'red'};
-    padding-left: 20px;
-    font-size: 18px;
-    
-    &:focus {
-        outline: none;
-    }
-`

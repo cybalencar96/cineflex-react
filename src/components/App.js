@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom"
-import Topbar from "./TopBar/Topbar";
+import Topbar from "./shared/TopBar/Topbar";
 import Movies from "./pages/Movies/Movies"
 import Sessions from "./pages/Sessions/Sessions"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"

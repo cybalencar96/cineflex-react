@@ -1,10 +1,11 @@
 import "./Sessions.css"
-import PageTitle from "../../PageTitle"
+import PageTitle from "../../shared/PageTitle"
 import { Link, useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { getMovieSesions } from "../../../api"
-import LoadingComponent from "../../LoadingComponent"
-import Footer from "../../Footer"
+import LoadingComponent from "../../shared/LoadingComponent"
+import Footer from "../../shared/Footer"
+
 export default function Sessions() {
     const [movie, setMovie] = useState("");
     const {idMovie} = useParams();

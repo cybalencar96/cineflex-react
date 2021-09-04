@@ -1,4 +1,4 @@
-import "../TopBar/Topbar.css"
+import "./Topbar.css"
 import { Link } from "react-router-dom"
 
 export default function Topbar() {
