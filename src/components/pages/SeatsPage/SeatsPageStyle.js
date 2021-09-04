@@ -7,7 +7,7 @@ const Button = styled.button`
     align-items: center;
     color: white;
     border-radius: 3px;
-    cursor: pointer;
+    cursor: ${({enabled}) => enabled ? "pointer" : "not-allowed"};
     margin: 30px auto ;
     font-size: 18px;
     width: 225px;

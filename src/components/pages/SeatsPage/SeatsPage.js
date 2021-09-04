@@ -35,7 +35,15 @@ export default function SeatsPage({setFinalInfos}) {
         }
         else { 
             setSelectedSeats(selectedSeats.filter(selectedSeat => selectedSeat.id !== seat.id));
-            setInputValues(inputValues.filter(inputValue => inputValue.seatId !== seat.id))
+            const inputAffected = inputValues.filter(inputValue => inputValue.seatId === seat.id)
+            if (inputAffected[0].name === "" && inputAffected[0].cpf === "") {
+                setInputValues(inputValues.filter(inputValue => inputValue.seatId !== seat.id))
+            } else {
+                const res = window.confirm("Deseja realmente desmarcar este assento? \nTodos os campos preenchidos serão apagados.")
+                if (res) {
+                    setInputValues(inputValues.filter(inputValue => inputValue.seatId !== seat.id))
+                }
+            }
             return "available-type"
         }
     }
