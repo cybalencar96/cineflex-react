@@ -12,11 +12,9 @@ export default function SeatsPage({setFinalInfos}) {
     const params = useParams();
     const [seats, setSeats] = useState("");
     const [selectedSeats, setSelectedSeats] = useState([]); 
-    const [inputValues, setInputValues] = useState({});
-    const regexCPF = /^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/
-    const regexNOME = /^[a-záàâãéèêíïóôõöúçñ ]+$/i;
+    const [inputValues, setInputValues] = useState([]);
     const history = useHistory();
-
+    
     useEffect(() => {
         getSessionSeats(params.idSession, setSeats);
     },[])
@@ -24,33 +22,35 @@ export default function SeatsPage({setFinalInfos}) {
     if (!seats) { return <LoadingComponent/> }
 
     function seatAvailable(seatId) {
-        if (selectedSeats.includes(seatId)) return false; //assento já selecionado, precisa deselecionar
+        const selectedSeatsIds = selectedSeats.map(selectedSeat => selectedSeat.id)
+        if (selectedSeatsIds.includes(seatId)) return false; //assento já selecionado, precisa deselecionar
         return true; //assento não selecionado, selecionar
     }
 
-    function toggleSeat(seatId) {
-        if (seatAvailable(seatId)) { 
-            setSelectedSeats([...selectedSeats,seatId]);
+    function toggleSeat(seat) {
+        if (seatAvailable(seat.id)) { 
+            setSelectedSeats([...selectedSeats,{...seat}]);
+            setInputValues([...inputValues,{seatId: seat.id, seatName: seat.name, name: "", cpf: ""}])
             return "selected-type"
         }
         else { 
-            setSelectedSeats(selectedSeats.filter(selectedSeat => selectedSeat !== seatId));
+            setSelectedSeats(selectedSeats.filter(selectedSeat => selectedSeat.id !== seat.id));
+            setInputValues(inputValues.filter(inputValue => inputValue.seatId !== seat.id))
             return "available-type"
         }
     }
 
-    //função que armazenará os valores dos inputs controlados
-    function change(event,attribute) {
-        //event target pega o elemento input
-        inputValues[attribute] = event.target.value
-        setInputValues({...inputValues});
-    }
-
     async function reserveSeats() {
+        const buyers = inputValues.map(inputValue => {
+            return {
+                idAssento: inputValue.id,
+                nome: inputValue.name,
+                cpf: inputValue.cpf
+            }
+        })
         const seatsObj = {
-            ids: selectedSeats,
-            name: inputValues.name,
-            cpf: inputValues.cpf
+            ids: selectedSeats.map(selectedSeat => selectedSeat.id),
+            compradores: buyers
         }
         try {
             await postSeats(seatsObj);
@@ -58,10 +58,10 @@ export default function SeatsPage({setFinalInfos}) {
                 movieName: seats.movie.title,
                 date: seats.day.date,
                 time: seats.name,
-                seats: seats.seats.filter((seat) => selectedSeats.includes(seat.id)),
-                buyerName: inputValues.name,
-                buyerCpf: inputValues.cpf
+                seats: seats.seats.filter((seat) => selectedSeats.map(selSeats => selSeats.id).includes(seat.id)),
+                buyers: inputValues
             }
+            console.log(seatsObj)
             setFinalInfos(() => finalInfos);
             history.push("/sucesso");
         }
@@ -70,15 +70,13 @@ export default function SeatsPage({setFinalInfos}) {
         }
     }
 
-    function isValid(str,type) {
-        if (type === "cpf") return regexCPF.test(str);
-        if (type === "name") return regexNOME.test(str);
-    }
-
     function activateButton() {
-        return (selectedSeats.length && isValid(inputValues.name,"name") && isValid(inputValues.cpf,"cpf"))
+        //retorna true ou false, dependendo se todos os names/cpfs passaram na validação do regex isValid
+        const namesAreValid = !inputValues.map(inputValue => isValid(inputValue.name,"name")).includes(false);
+        const cpfsAreValid = !inputValues.map(inputValue => isValid(inputValue.cpf,"cpf")).includes(false);
+        
+        return (!!selectedSeats.length && namesAreValid && cpfsAreValid)
     }
-    
 
     return (
         <main className="main-content">
@@ -87,7 +85,7 @@ export default function SeatsPage({setFinalInfos}) {
             <section className="seats">
                 {
                     seats.seats.map(seat => (
-                        <Seat toggleSeat={toggleSeat} id={seat.id} name={seat.name} isAvailable={seat.isAvailable}/>
+                        <Seat toggleSeat={toggleSeat} seat={seat}/>
                     ))
                 }
             </section>
@@ -107,20 +105,11 @@ export default function SeatsPage({setFinalInfos}) {
                 </div>
             </section>
             
-            <section className="seatsPage-input">
-                <h3>Nome do comprador:</h3>
-                {/* Exemplo de input controlado (pelo react) usando onChange e value
-                    Desta forma caso o input seja renderizado ele não perderá o valor
-                */}
-                <Input isValid={isValid(inputValues.name,"name")} placeholder="Digite seu nome..." onChange={(e) => change(e,"name")} value={!inputValues.name ? "" : inputValues.name}/>
-                <p>{isValid(inputValues.name,"name") ? "" : "nome invalido"}</p>
-            </section>
-            <section  className="seatsPage-input">
-                <h3>CPF do comprador:</h3>
-                {/* styled component */}
-                <Input isValid={isValid(inputValues.cpf,"cpf")} placeholder="Digite seu CPF..." onChange={(e) => change(e,"cpf")} value={!inputValues.cpf ? "" : inputValues.cpf}/>
-                <p>{isValid(inputValues.cpf,"cpf") ? "" : "cpf invalido"}</p>
-            </section>
+            {
+                inputValues.map((inputValue) => {
+                    return <InputBuyerInfo myInputValue={inputValue} inputValues={inputValues} setInputValues={setInputValues}/>
+                })
+            }
 
             {/* styled component */}
             <Button enabled={activateButton()} onClick={activateButton()  ? reserveSeats : ()=>{}}>Reservar assento(s)</Button>
@@ -129,4 +118,50 @@ export default function SeatsPage({setFinalInfos}) {
         </main>
      
     )
+}
+
+function InputBuyerInfo({myInputValue, inputValues, setInputValues}) {
+    const {
+        seatId,
+        seatName,
+        name,
+        cpf
+    } = myInputValue
+    //função que armazenará os valores dos inputs controlados
+    function change(event,attribute) {
+        //event target pega o elemento input
+            inputValues.forEach((inputValue,idx) => {
+                if (inputValue.seatId === seatId) {
+                    myInputValue[attribute] = event.target.value;
+                    inputValues[idx][attribute] = event.target.value;
+                    setInputValues([...inputValues]);
+                }
+            })
+    }
+
+    return (
+        <>
+            <section className="seatsPage-input">
+                <h3>Nome do comprador (assento {seatName}):</h3>
+                {/* Exemplo de input controlado (pelo react) usando onChange e value
+                    Desta forma caso o input seja renderizado ele não perderá o valor */}
+                <Input isValid={isValid(name,"name")} placeholder="Digite seu nome..." onChange={(e) => change(e,"name")} value={!name ? "" : name}/>
+                <p>{isValid(name,"name") ? "" : "nome invalido"}</p>
+            </section>
+            <section  className="seatsPage-input">
+                <h3>CPF do comprador (assento {seatName}):</h3>
+                {/* styled component */}
+                <Input isValid={isValid(cpf,"cpf")} placeholder="Digite seu CPF..." onChange={(e) => change(e,"cpf")} value={!cpf ? "" : cpf}/>
+                <p>{isValid(cpf,"cpf") ? "" : "cpf invalido"}</p>
+            </section>
+        </>
+    )
+}
+
+function isValid(str,type) {
+    const regexCPF = /^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/
+    const regexNOME = /^[a-záàâãéèêíïóôõöúçñ ]+$/i;
+
+    if (type === "cpf") return regexCPF.test(str);
+    if (type === "name") return regexNOME.test(str);
 }

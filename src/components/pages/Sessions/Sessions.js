@@ -41,7 +41,6 @@ export default function Sessions() {
 
 function DaySessions(props) {
     const { 
-        id,
         weekday,
         date,
         showtimes

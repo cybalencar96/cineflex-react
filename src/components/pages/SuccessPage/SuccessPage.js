@@ -7,12 +7,10 @@ export default function SuccessPage(props) {
         movieName,
         date,
         time,
-        seats,
-        buyerName,
-        buyerCpf
+        buyers
     } = props.finalInfos
 
-    console.log(props.finalInfos)
+    console.log(buyers)
     return (
         <main className="main-content main-success-page">
             <PageTitle>
@@ -26,13 +24,16 @@ export default function SuccessPage(props) {
                     <p>{date} - {time}</p>
                 </section>
                 <section class="final-infos">
-                    <h3>Ingressos</h3>
-                    { seats.map(seat => <p>Assento {seat.name}</p>) }
-                </section>
-                <section class="final-infos">
-                    <h3>Comprador</h3>
-                    <p>Nome: {buyerName}</p>
-                    <p>CPF: {buyerCpf}</p>
+                    {
+                        buyers.map(buyer => {
+                            return <div>
+                                <h3>Comprador {buyer.name}</h3>
+                                <p>CPF: {buyer.cpf}</p>
+                                <p>Assento: {buyer.seatName}</p>
+                            </div>
+                        })
+                    }
+                    
                 </section>
             
 
