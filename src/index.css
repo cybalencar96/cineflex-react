@@ -12,8 +12,8 @@ body {
 }
 
 .main-content {
-    height: calc(100vh - 67px);
     margin-top: 67px;
+    margin-bottom: 150px;
 }
 
 
@@ -30,19 +30,19 @@ body {
 .footer {
     display: flex;
     align-items: center;
-    padding: 20px;
-    height: 117px;
+    height: 120px;
     
-
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100vw;
-
     background-color: #DFE6ED;
-
 }
 
 .movie-footer {
-    width: 64px!important;
-    height: 89px!important;
+    width: 64px;
+    height: 89px;
+    margin-left: 20px
 }
 
 .footer h3 {
